@@ -2,47 +2,37 @@
 //display an underlying character or a blank placeholder (such as an underscore), 
 // depending on whether or not the user has guessed the letter. 
 //That means the constructor should define:
-var inquirer = require('inquirer');
 
-var Letter = function(guessedLetter){
-    var charstring = guessedLetter;
+var guessed = [];
+
+var Letter = function(letter){
     // A string value to store the underlying character for the letter
-    this.CharString = charstring
+    this.CharString = letter
     // A boolean value that stores whether that letter has been guessed yet
     this.Guessed = false
     // A function that returns the underlying character if the letter has been guessed, or a placeholder (like an underscore) if the letter has not been guessed
-    this.returnChar = function(inputLetter){
-        if (charstring !== inputLetter) {
-            console.log("_")
+    this.toString = function(inputLetter){
+        if (this.Guessed) {
+            return inputLetter; 
+            // return the placeholder
         }  
         else{
-            console.log(inputLetter)
+            return ("_")
+            //return the character
         }      
     }
     // A function that takes a character as an argument and checks it against the underlying character, updating the stored boolean value to true if it was guessed correctly
-    this.guessEval = function (){
+    this.checkLetter = function (inputLetter){
+        if (this.CharString === inputLetter) {
+            this.Guessed = true;
+            guessed.push(inputLetter)
+            console.log("That's a letter in our word! Letters Guessed So Far: "+guessed);
+            return true;
+        }  
+        else{
+            console.log("That's not a letter in our word! Letters Guessed So Far: "+guessed);
+            return false;
+        }  
     }
 }
-var word = "test"
-var letters = []; 
-//loops through words
-for (let i = 0; i < word.length; i++) {
-    
-    var char = word.charAt(i);
-    var bob = new Letter(char); 
-    bob.returnChar(); 
-    letters.push(bob);
-    console.log(letters); 
-}
-inquirer.prompt([{
-    name: "letter",
-    message: "What's your guess? "   
-}]).then(answers => {
-var input = answers.letter
-for (let i = 0; i<letters.length; i++){
-letters[i].returnChar(input)
-}
-
-
-});
-
+module.exports = Letter;
